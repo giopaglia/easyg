@@ -42,9 +42,9 @@ x_valid = np.array(x_valid).reshape(len(x_valid),140,1).astype('float32')
 x_test  = np.array(x_test ).reshape(len(x_test ),140,1).astype('float32')
 
 y_valid_raw  = y_valid
-y_train = np.array((y_train)).reshape(len(y_train),1).astype('int32') # y_train = np.array(to_categorical(y_train)).reshape(len(y_train),2).astype('int32')
-y_valid = np.array((y_valid)).reshape(len(y_valid),1).astype('int32') # y_valid = np.array(to_categorical(y_valid)).reshape(len(y_valid),2).astype('int32')
-y_test  = np.array((y_test )).reshape(len(y_test ),1).astype('int32') # y_test  = np.array(to_categorical(y_test )).reshape(len(y_test ),2).astype('int32')
+y_train = np.array(to_categorical(y_train)).reshape(len(y_train),2).astype('int32')
+y_valid = np.array(to_categorical(y_valid)).reshape(len(y_valid),2).astype('int32')
+y_test  = np.array(to_categorical(y_test )).reshape(len(y_test ),2).astype('int32')
 
 print()
 print (" TRAINING  DATA SHAPE:\t", x_train.shape, "\t-> ", y_train.shape)
@@ -61,13 +61,14 @@ model = Sequential()
 # Add model layers
 model.add(Conv1D(15, kernel_size=3, activation='relu', input_shape=(140,1)))
 model.add(Flatten())
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dense(2, activation='softmax'))
 
 # Compile model using accuracy to measure model performance
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Train the model
 model.fit(x_train, y_train, validation_data=(x_valid, y_valid), epochs=30)
+
 
 
 # Test on the validation set
