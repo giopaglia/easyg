@@ -41,7 +41,7 @@ x_train = np.array(x_train).reshape(len(x_train),140,1).astype('float32')
 x_valid = np.array(x_valid).reshape(len(x_valid),140,1).astype('float32')
 x_test  = np.array(x_test ).reshape(len(x_test ),140,1).astype('float32')
 
-y_test_raw  = y_test
+y_valid_raw  = y_valid
 y_train = np.array(to_categorical(y_train)).reshape(len(y_train),2).astype('int32')
 y_valid = np.array(to_categorical(y_valid)).reshape(len(y_valid),2).astype('int32')
 y_test  = np.array(to_categorical(y_test )).reshape(len(y_test ),2).astype('int32')
@@ -71,18 +71,18 @@ model.fit(x_train, y_train, validation_data=(x_valid, y_valid), epochs=30)
 
 
 
-# Test on the test set
-fx_test = model.predict(x_test)
+# Test on the valid set
+fx_valid = model.predict(x_valid)
 
 # Let's say final solution is the obtained by considering the max between the 2 output neurons
-max_fx_test = [0 if fx[0]>fx[1] else 1 for fx in fx_test]
-positive_predictions = sum(1 for i, j in zip(max_fx_test, y_test_raw) if i == j)
+max_fx_valid = np.argmax(fx_valid, axis=1)
+positive_predictions = sum(1 for i, j in zip(max_fx_valid, y_valid_raw) if i == j)
 
-print() 
-print("TEST outcomes:")
-print('\n'.join('{:4d}:  ({:1.2f}-{:1.2f}) --> prediction: {}\t{}'.format(i, fx[0], fx[1], max_fx_test[i], "YEAHS!" if max_fx_test[i]==y_test_raw[i] else "WRONG!") for i,fx in enumerate(fx_test)))
 print()
-print("Accuracy: ", float(positive_predictions)/len(x_test))
+print("valid outcomes:")
+print('\n'.join('{:4d}:  ({:1.2f}-{:1.2f}) --> prediction: {}\t{}'.format(i, fx[0], fx[1], max_fx_valid[i], "YEAHS!" if max_fx_valid[i]==y_valid_raw[i] else "WRONG!") for i,fx in enumerate(fx_valid)))
+print()
+print("Accuracy: ", float(positive_predictions)/len(x_valid))
 
 
 
