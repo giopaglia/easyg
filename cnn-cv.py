@@ -75,7 +75,7 @@ for train, test in kfold.split(x_train, y_train):
   model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Train the model
-  model.fit(x_train, y_train, epochs=30)
+model.fit(x_train, y_train, epochs=30)
 # evaluate the model
 scores = model.evaluate(x_train[test], y_train[test], verbose =0)
 print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
