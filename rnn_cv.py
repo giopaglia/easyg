@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import pandas as pd
 import sklearn
@@ -11,11 +12,13 @@ from sklearn.model_selection import StratifiedKFold
 
 seed = 7
 
-DATA ='data/trainval.csv'
+suffix = ''
+if len(sys.argv) > 1:
+    suffix = '-'+sys.argv[1]
 
 
-#DATA_TRAIN = 'data/train.csv'
-#DATA_VALID = 'data/validation.csv'
+DATA = 'data/trainval'+suffix+'.csv'
+#DATA ='data/trainval-shifted.csv' # tmp
 
 def load_dataset(path):
     dataset = pd.read_csv(path, sep=',', header=None)
@@ -57,6 +60,7 @@ es = EarlyStopping(
         verbose=0,
         mode='auto',
         restore_best_weights=True)
+
 
 model.fit(input[train], output[train], epochs=30, batch_size=50, callbacks=[es])
 # evaluate the model

@@ -16,7 +16,13 @@ from sklearn.model_selection import StratifiedKFold
 ############################################################
 
 seed =7
-DATA_TRAIN = 'data/shifted-cv.csv'
+
+suffix = ''
+if len(sys.argv) > 1:
+    suffix = '-'+sys.argv[1]
+
+
+DATA_TRAIN = 'data/trainval'+suffix+'.csv'
 #DATA_VALID = 'data/validation.csv'
 #DATA_TEST  = 'data/test.csv'
 

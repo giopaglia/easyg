@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import pandas as pd
 
@@ -7,8 +8,14 @@ from keras.layers.recurrent import LSTM
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping
 
-DATA_TRAIN = 'data/train.csv'
-DATA_VALID = 'data/validation.csv'
+
+suffix = ''
+if len(sys.argv) > 1:
+    suffix = '-'+sys.argv[1]
+
+
+DATA_TRAIN = 'data/train'+suffix+'.csv'
+DATA_VALID = 'data/validation'+suffix+'.csv'
 
 def load_dataset(path):
     dataset = pd.read_csv(path, sep=',', header=None)

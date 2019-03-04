@@ -8,21 +8,22 @@ from keras.utils import to_categorical
 
 ############################################################
 # Convolutional Network - TEST:
-#  - Read training, validation and test data
+#  - Read training and validation data
 #  - Train a convolutional network with one hidden layers
-#  - Test data
 ############################################################
 
+suffix = ''
+if len(sys.argv) > 1:
+    suffix = '-'+sys.argv[1]
 
-DATA_TRAIN = 'data/train.csv'
-DATA_VALID = 'data/validation.csv'
-DATA_TEST  = 'data/test.csv'
+
+DATA_TRAIN = 'data/train'+suffix+'.csv'
+DATA_VALID = 'data/validation'+suffix+'.csv'
 
 
 # Retrieve data from files
 data_train = pd.read_csv(DATA_TRAIN, sep=',', header=None)
 data_valid = pd.read_csv(DATA_VALID, sep=',', header=None)
-data_test  = pd.read_csv(DATA_TEST,  sep=',', header=None)
 
 # Separate datapoints (x) and label (y) from each row
 def unpack_data(data):
@@ -30,26 +31,21 @@ def unpack_data(data):
 
 (x_train, y_train) = unpack_data(data_train)
 (x_valid, y_valid) = unpack_data(data_valid)
-(x_test,  y_test)  = unpack_data(data_test)
 
 print()
 print(" TRAINING  SAMPLES: ", len(x_train))
 print("VALIDATION SAMPLES: ", len(x_valid))
-print("   TEST    SAMPLES: ", len(x_test))
 
 x_train = np.array(x_train).reshape(len(x_train),140,1).astype('float32')
 x_valid = np.array(x_valid).reshape(len(x_valid),140,1).astype('float32')
-x_test  = np.array(x_test ).reshape(len(x_test ),140,1).astype('float32')
 
 y_valid_raw  = y_valid
 y_train = np.array(to_categorical(y_train)).reshape(len(y_train),2).astype('int32')
 y_valid = np.array(to_categorical(y_valid)).reshape(len(y_valid),2).astype('int32')
-y_test  = np.array(to_categorical(y_test )).reshape(len(y_test ),2).astype('int32')
 
 print()
 print (" TRAINING  DATA SHAPE:\t", x_train.shape, "\t-> ", y_train.shape)
 print ("VALIDATION DATA SHAPE:\t", x_valid.shape, "\t-> ", y_valid.shape)
-print ("   TEST    DATA SHAPE:\t", x_test.shape, "\t-> ", y_test.shape)
 print()
 
 
