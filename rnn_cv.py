@@ -11,7 +11,7 @@ from sklearn.model_selection import StratifiedKFold
 
 seed = 7
 
-DATA ='data/train.csv'
+DATA ='data/trainval.csv'
 
 
 #DATA_TRAIN = 'data/train.csv'
