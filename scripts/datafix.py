@@ -5,11 +5,11 @@ seed = 58123
 np.random.seed(seed)
 
 suffix=''
-#suffix='-shifted'
+suffix='-shifted'
 DATA_SOURCE = 'data/ECG5000'+suffix+'.txt'
 
 def filter_condition(row):
-    return row[0] == 1 or row[0] == 2
+    return (row[0] == 1 or row[0] == 2) and len(row[1:]) == 140
 
 def concat_sources():
     data_1 = pd.read_csv(DATA_SOURCE, sep=',', header=None)
@@ -28,6 +28,7 @@ def split_data(data, r_train=0.6, r_val=0.3, r_test=0.1):
     l = len(data)
     idx_train = int(np.floor(l * r_train))
     idx_val = int(np.floor(l * r_val) + idx_train + 1)
+     
     data_trainval = data[:idx_val]
     data_train = data[:idx_train]
     data_val = data[idx_train:idx_val]

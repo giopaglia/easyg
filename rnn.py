@@ -13,6 +13,7 @@ suffix = ''
 if len(sys.argv) > 1:
     suffix = '-'+sys.argv[1]
 
+suffix = '-shifted'
 
 DATA_TRAIN = 'data/train'+suffix+'.csv'
 DATA_VALID = 'data/validation'+suffix+'.csv'
