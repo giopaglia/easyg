@@ -11,6 +11,7 @@ from keras.callbacks import EarlyStopping
 from sklearn.model_selection import StratifiedKFold
 
 seed = 7
+np.random.seed(seed)
 
 suffix = ''
 if len(sys.argv) > 1:
@@ -31,6 +32,7 @@ def build_model():
     model.add(LSTM(100, input_shape=(None, 140)))
     model.add(Dense(1, activation='sigmoid'))
 
+    # lr is the learning rate of the optimizer
     optimizer = Adam(lr=0.001)
 
     model.compile(
