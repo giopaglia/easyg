@@ -4,7 +4,7 @@ import numpy as np
 import sklearn
 
 from keras.models import Sequential
-from keras.layers import Dense, Conv1D, Flatten
+from keras.layers import Dense, Conv1D, Flatten, MaxPooling1D, Dropout
 from keras.optimizers import Adam
 from keras.utils import to_categorical
 from keras.callbacks import EarlyStopping
@@ -46,8 +46,13 @@ def build_model():
     model=Sequential()
 
     # Add model layers
-    model.add(Conv1D(15, kernel_size=3, activation='relu', input_shape=(140,1)))
+    model.add(Conv1D(50, kernel_size=5, activation='relu', input_shape=(140,1)))
+    model.add(Dropout(0.05))
+    model.add(MaxPooling1D(10))
+    model.add(Conv1D(25, kernel_size=3, activation='relu'))
+    model.add(Dropout(0.05))
     model.add(Flatten())
+    model.add(Dense(15, activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
 
     # lr is the learning rate of the optimizer
@@ -66,15 +71,15 @@ for i_train, i_val in kfold.split(X, y):
     model = build_model()
 
     es = EarlyStopping(
-        monitor='val_acc',
+        monitor='val_loss',
         min_delta=0,
-        patience=2,
+        patience=4,
         verbose=0,
         mode='auto',
         restore_best_weights=True)
 
     # Train the model
-    model.fit(X[i_train], y[i_train], validation_data=(X[i_val], y[i_val]), epochs=30, callbacks=[es])
+    model.fit(X[i_train], y[i_train], validation_data=(X[i_val], y[i_val]), epochs=100, callbacks=[es])
     # evaluate the model
     scores = model.evaluate(X[i_val], y[i_val], verbose =0)
     print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
