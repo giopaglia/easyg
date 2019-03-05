@@ -63,25 +63,22 @@ kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
 cvscores = []
 for train, test in kfold.split(x_train, y_train):
 
-# Create model
-  model=Sequential()
+    # Create model
+    model=Sequential()
 
-# Add model layers
-  model.add(Conv1D(15, kernel_size=3, activation='relu', input_shape=(140,1)))
-  model.add(Flatten())
-  model.add(Dense(1, activation='sigmoid'))
+    # Add model layers
+    model.add(Conv1D(15, kernel_size=3, activation='relu', input_shape=(140,1)))
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
 
-# Compile model using accuracy to measure model performance
-  model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    # Compile model using accuracy to measure model performance
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# Train the model
-model.fit(x_train, y_train, epochs=30)
-# evaluate the model
-scores = model.evaluate(x_train[test], y_train[test], verbose =0)
-print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
-cvscores.append(scores[1] * 100)
+    # Train the model
+    model.fit(x_train[train], y_train[train], validation_data=(x_train[test], y_train[test]), epochs=30)
+    # evaluate the model
+    scores = model.evaluate(x_train[test], y_train[test], verbose =0)
+    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+    cvscores.append(scores[1] * 100)
+
 print("%.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
-
-# Test on the validation set
-#_, acc = model.evaluate(x_valid, y_valid)
-#print('Accuracy: {0}'.format(acc * 100))
