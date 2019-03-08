@@ -12,10 +12,23 @@ from sklearn.model_selection import StratifiedKFold
 
 seed = 7
 
-suffix = ''
-if len(sys.argv) > 1:
+suffix = '-shifted'
+if len(sys.argv) == 2:
     suffix = '-'+sys.argv[1]
 
+arg_num_neurons = 100
+arg_lr = 0.001
+arg_n_splits = 10
+arg_patience = 2
+arg_batch_size = 50
+
+if len(sys.argv) == 7:
+    suffix = '-'+sys.argv[1]
+    arg_num_neurons = int(sys.argv[2])
+    arg_lr          = float(sys.argv[3])
+    arg_n_splits    = int(sys.argv[4])
+    arg_patience    = int(sys.argv[5])
+    arg_batch_size  = int(sys.argv[6])
 
 DATA = 'data/trainval'+suffix+'.csv'
 
@@ -28,10 +41,10 @@ def load_dataset(path):
 
 def build_model():
     model = Sequential()
-    model.add(LSTM(100, input_shape=(None, 140)))
+    model.add(LSTM(arg_num_neurons, input_shape=(None, 140)))
     model.add(Dense(1, activation='sigmoid'))
 
-    optimizer = Adam(lr=0.001)
+    optimizer = Adam(lr=arg_lr)
 
     model.compile(
             loss='binary_crossentropy',
@@ -42,7 +55,7 @@ def build_model():
 
 (X, y) = load_dataset(DATA)
 
-kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
+kfold = StratifiedKFold(n_splits=arg_n_splits, shuffle=True, random_state=seed)
 cvscores = []
 for i_train, i_val in kfold.split(X, y):
     model = build_model()
@@ -50,16 +63,16 @@ for i_train, i_val in kfold.split(X, y):
     es = EarlyStopping(
         monitor='val_acc',
         min_delta=0,
-        patience=2,
+        patience=arg_patience,
         verbose=0,
         mode='auto',
         restore_best_weights=True)
 
-    model.fit(X[i_train], y[i_train], validation_data=(X[i_val], y[i_val]), epochs=30, batch_size=50, callbacks=[es])
+    model.fit(X[i_train], y[i_train], validation_data=(X[i_val], y[i_val]), epochs=30, batch_size=arg_batch_size, callbacks=[es])
 
     # evaluate the model
     scores = model.evaluate(X[i_val], y[i_val], verbose =0)
     print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
     cvscores.append(scores[1] * 100)
 
-print("%.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
+print("Accuracy: %.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
