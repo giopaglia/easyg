@@ -11,7 +11,24 @@ from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping
 from sklearn.model_selection import StratifiedKFold
 
+
+# the random seed initialization in tensor flow is sufficient to get reproducible results
+
+#######################################
+#import random
+#import time
+# seed = random.seed(time.time())
+#######################################
+#from numpy.random import seed
+#seed(1)
+#######################################
+#from tensorflow import set_random_seed    #  <- This
+#set_random_seed(2)                        #   <- one
+#######################################
 seed = 7
+#######################################
+
+
 
 suffix = '-shifted'
 if len(sys.argv) == 2:
@@ -79,14 +96,14 @@ for i_train, i_val in kfold.split(X, y):
     model = build_model()
 
     es = EarlyStopping(
-        monitor='val_acc',
+        monitor='val_loss',
         min_delta=0,
         patience=arg_patience,
         verbose=0,
         mode='auto',
         restore_best_weights=True)
 
-    model.fit(X[i_train], y[i_train], validation_data=(X[i_val], y[i_val]), epochs=30, batch_size=arg_batch_size, callbacks=[es])
+    model.fit(X[i_train], y[i_train], validation_data=(X[i_val], y[i_val]), epochs=60, batch_size=arg_batch_size, callbacks=[es])
 
     # evaluate the model
     scores = model.evaluate(X[i_val], y[i_val], verbose =0)

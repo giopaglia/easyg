@@ -1,0 +1,53 @@
+Here are listed the best results I got so far
+
+spike
+	for a in $(seq 1 20); do python rnn-cv-rnd.py shifted 35 14 0.2 0.1 0.01 14 10 20 >> spike.tmp; done
+	Accuracy: 98.46% (+/- 1.35%)
+	Accuracy: 98.46% (+/- 1.77%)
+	Accuracy: 98.52% (+/- 1.00%)
+	Accuracy: 98.58% (+/- 0.90%)
+	Accuracy: 98.70% (+/- 0.97%)
+	Accuracy: 98.71% (+/- 1.11%)
+	Accuracy: 98.76% (+/- 1.17%)
+	Accuracy: 98.77% (+/- 0.78%)
+	Accuracy: 98.77% (+/- 0.96%)
+	Accuracy: 98.77% (+/- 1.26%)
+	Accuracy: 98.83% (+/- 0.96%)
+	Accuracy: 98.83% (+/- 1.07%)
+	Accuracy: 98.83% (+/- 1.32%)
+	Accuracy: 98.89% (+/- 0.82%)
+	Accuracy: 98.95% (+/- 0.93%)
+	Accuracy: 98.95% (+/- 0.99%)
+	Accuracy: 98.95% (+/- 1.31%)
+	Accuracy: 99.01% (+/- 0.64%)
+	Accuracy: 99.02% (+/- 1.37%)
+	Accuracy: 99.07% (+/- 1.06%)
+
+	98.79 +/ 1.09
+
+
+spike-2:
+	for a in $(seq 1 20); do python rnn-cv-rnd.py shifted 140 5 0.01 0.5 0.005 14 10 20 >> spike-2.tmp; done
+	Accuracy: 98.58% (+/- 1.06%)
+	Accuracy: 98.64% (+/- 0.71%)
+	Accuracy: 98.76% (+/- 1.17%)
+	Accuracy: 98.77% (+/- 0.78%)
+	Accuracy: 98.83% (+/- 0.62%)
+	Accuracy: 98.83% (+/- 0.90%)
+	Accuracy: 98.83% (+/- 1.16%)
+	Accuracy: 98.83% (+/- 1.25%)
+	Accuracy: 98.89% (+/- 0.82%)
+	Accuracy: 98.89% (+/- 0.83%)
+	Accuracy: 98.89% (+/- 0.83%)
+	Accuracy: 98.89% (+/- 1.00%)
+	Accuracy: 98.89% (+/- 1.00%)
+	Accuracy: 98.95% (+/- 1.23%)
+	Accuracy: 99.01% (+/- 0.72%)
+	Accuracy: 99.01% (+/- 0.85%)
+	Accuracy: 99.01% (+/- 0.86%)
+	Accuracy: 99.14% (+/- 1.03%)
+	Accuracy: 98.83% (+/- 1.16%)
+	Accuracy: 98.70% (+/- 1.12%)
+	Accuracy: 98.95% (+/- 0.67%)
+
+	98.86 +/- 0.94
