@@ -5,6 +5,7 @@ import sklearn
 
 from keras.models import Sequential
 from keras.layers import Dense
+from keras.layers import Dropout
 from keras.layers.recurrent import LSTM
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping
@@ -16,19 +17,34 @@ suffix = '-shifted'
 if len(sys.argv) == 2:
     suffix = '-'+sys.argv[1]
 
-arg_num_neurons = 100
-arg_lr = 0.001
-arg_n_splits = 10
-arg_patience = 2
-arg_batch_size = 50
+# arg_num_neurons = 100
+# arg_num_neurons2 = 0
+# arg_dropout = 0.05
+# arg_lr = 0.05
+# arg_n_splits = 35
+# arg_patience = 10
+# arg_batch_size = 20
+arg_num_neurons2 = 0
 
-if len(sys.argv) == 7:
+if len(sys.argv) == 8:
     suffix = '-'+sys.argv[1]
     arg_num_neurons = int(sys.argv[2])
-    arg_lr          = float(sys.argv[3])
-    arg_n_splits    = int(sys.argv[4])
-    arg_patience    = int(sys.argv[5])
-    arg_batch_size  = int(sys.argv[6])
+    arg_dropout     = float(sys.argv[3])
+    arg_lr          = float(sys.argv[4])
+    arg_n_splits    = int(sys.argv[5])
+    arg_patience    = int(sys.argv[6])
+    arg_batch_size  = int(sys.argv[7])
+
+if len(sys.argv) == 10:
+    suffix = '-'+sys.argv[1]
+    arg_num_neurons = int(sys.argv[2])
+    arg_num_neurons2= int(sys.argv[3])
+    arg_rec_dropout = float(sys.argv[4])
+    arg_dropout     = float(sys.argv[5])
+    arg_lr          = float(sys.argv[6])
+    arg_n_splits    = int(sys.argv[7])
+    arg_patience    = int(sys.argv[8])
+    arg_batch_size  = int(sys.argv[9])
 
 DATA = 'data/trainval'+suffix+'.csv'
 
@@ -41,7 +57,9 @@ def load_dataset(path):
 
 def build_model():
     model = Sequential()
-    model.add(LSTM(arg_num_neurons, input_shape=(None, 140)))
+    model.add(LSTM(arg_num_neurons, input_shape=(None, 140), recurrent_dropout=arg_rec_dropout))
+    model.add(Dropout(arg_dropout))
+    if (arg_num_neurons2 > 0): model.add(Dense(arg_num_neurons2))
     model.add(Dense(1, activation='sigmoid'))
 
     optimizer = Adam(lr=arg_lr)
