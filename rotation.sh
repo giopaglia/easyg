@@ -5,16 +5,16 @@ set -x
 RUN_FILE=rnn-cv.py
 
 LOG_DIR="logs"
-OUT_FILE="data-v11-loss+60ep.txt"
+OUT_FILE="data-v13.txt"
 
 RANDOM=$$$(date +%s)
 # Parameters
 ganger=5
-num_neurons_v=( 140 ) # 35 100 140 ) # "70" "100" "140" ) # "35" 
-num_neurons2_v=( 5 ) # 14 # "5" "7" "14" "35" ) # "10" 
+num_neurons_v=( 35 ) # 140 ) # 35 100 140 ) # "70" "100" "140" ) # "35" 
+num_neurons2_v=( {5..14} ) # 14 # "5" "7" "14" "35" ) # "10" 
 rec_dropout_v=( "0.0" ) # "0.01" "0.1" "0.2" "0.5" )
 dropout_v=( "0.1" ) # "0.1" "0.5" )
-lr_v=( "0.01" ) # "0.005" ) # "0.005" "0.01" "0.05" )
+lr_v=( 0.01 ) # "0.005" ) # "0.005" "0.01" "0.05" )
 n_splits_v=( 14 ) # 10 14 35
 patience_v=( 12 ) #
 batch_size_v=( 20 ) # 10 20 )
@@ -121,5 +121,7 @@ printf "$out_string\n" >> "$OUT_FILE"
 done
 done
 
+paplay /usr/share/sounds/freedesktop/stereo/complete.oga
 vim "$OUT_FILE"
+
 exit 0

@@ -34,14 +34,14 @@ suffix = '-shifted'
 if len(sys.argv) == 2:
     suffix = '-'+sys.argv[1]
 
-# arg_num_neurons = 100
-# arg_num_neurons2 = 0
-# arg_dropout = 0.05
-# arg_lr = 0.05
-# arg_n_splits = 35
-# arg_patience = 10
-# arg_batch_size = 20
-arg_num_neurons2 = 0
+arg_num_neurons = 140
+arg_num_neurons2 = 5
+arg_rec_dropout = 0.0
+arg_dropout = 0.1
+arg_lr = 0.01
+arg_n_splits = 14
+arg_patience = 12
+arg_batch_size = 20
 
 if len(sys.argv) == 8:
     suffix = '-'+sys.argv[1]
