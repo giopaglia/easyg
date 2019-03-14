@@ -31,6 +31,7 @@ seed = 7
 
 
 suffix = '-shifted'
+#suffix = ''
 if len(sys.argv) == 2:
     suffix = '-'+sys.argv[1]
 
@@ -67,7 +68,7 @@ DATA = 'data/trainval'+suffix+'.csv'
 
 def load_dataset(path):
     dataset = pd.read_csv(path, sep=',', header=None)
-    X = dataset.values[:, 1:]
+    X = dataset.values[:, 1:][i]
     Y = dataset.values[:, 0].astype('int32')
     X =  X.reshape(X.shape[0], 1, X.shape[1])
     return (X, Y)
@@ -96,7 +97,7 @@ for i_train, i_val in kfold.split(X, y):
     model = build_model()
 
     es = EarlyStopping(
-        monitor='val_loss',
+        monitor='val_acc',
         min_delta=0,
         patience=arg_patience,
         verbose=0,
