@@ -68,7 +68,7 @@ DATA = 'data/trainval'+suffix+'.csv'
 
 def load_dataset(path):
     dataset = pd.read_csv(path, sep=',', header=None)
-    X = dataset.values[:, 1:][i]
+    X = dataset.values[:, 1:]
     Y = dataset.values[:, 0].astype('int32')
     X =  X.reshape(X.shape[0], 1, X.shape[1])
     return (X, Y)
