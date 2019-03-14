@@ -51,7 +51,8 @@ def build_model():
     model.add(Dense(5))
     model.add(Dense(1, activation='sigmoid'))
 
-    optimizer = Adam(lr=0.01)
+    # lr is the learning rate of the optimizer
+    optimizer = Adam(lr=0.001)
 
     model.compile(
             loss='binary_crossentropy',
