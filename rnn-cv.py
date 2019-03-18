@@ -10,32 +10,17 @@ from keras.layers.recurrent import LSTM
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping
 from sklearn.model_selection import StratifiedKFold
+from tensorflow import set_random_seed
 
+# Set seed for reproducible results
+seed = 871
+np.random.seed(seed)
+set_random_seed(seed)
 
-# the random seed initialization in tensor flow is sufficient to get reproducible results
-
-#######################################
-#import random
-#import time
-# seed = random.seed(time.time())
-#######################################
-#from numpy.random import seed
-#seed(1)
-#######################################
-#from tensorflow import set_random_seed    #  <- This
-#set_random_seed(2)                        #   <- one
-#######################################
-seed = 7
-#######################################
-
-
-
-suffix = '-shifted'
-#suffix = ''
-if len(sys.argv) == 2:
-    suffix = '-'+sys.argv[1]
-
-DATA = 'data/trainval'+suffix+'.csv'
+DATA        = 'data/trainval-shifted.csv'
+DATA_TRAIN  = 'data/train-shifted.csv'
+DATA_VAL    = 'data/validation-shifted.csv'
+DATA_TEST   = 'data/test-shifted.csv'
 
 def load_dataset(path):
     dataset = pd.read_csv(path, sep=',', header=None)
@@ -61,13 +46,8 @@ def build_model():
 
     return model
 
-(X, y) = load_dataset(DATA)
 
-kfold = StratifiedKFold(n_splits=14, shuffle=True, random_state=seed)
-cvscores = []
-for i_train, i_val in kfold.split(X, y):
-    model = build_model()
-
+def train_model(model, X_train, Y_train, X_val, Y_val):
     es = EarlyStopping(
         monitor='val_acc',
         min_delta=0,
@@ -76,11 +56,48 @@ for i_train, i_val in kfold.split(X, y):
         mode='auto',
         restore_best_weights=True)
 
-    model.fit(X[i_train], y[i_train], validation_data=(X[i_val], y[i_val]), epochs=60, batch_size=20, callbacks=[es])
+    model.fit(X_train, Y_train, validation_data=(X_val, Y_val), epochs=60, batch_size=20, callbacks=[es])
+    return model
 
-    # evaluate the model
-    scores = model.evaluate(X[i_val], y[i_val], verbose =0)
-    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
-    cvscores.append(scores[1] * 100)
+def evaluate_model():
+    print('\n\Evaluating model...\n\n')
+    cvscores = []
+    (X, y) = load_dataset(DATA)
+    kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
+    for i_train, i_val in kfold.split(X, y):
+        model = build_model()
 
-print("Accuracy: %.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
+        # Train the model
+        model = train_model(model, X[i_train], y[i_train], X[i_val], y[i_val])
+
+        # Evaluate the model
+        scores = model.evaluate(X[i_val], y[i_val], verbose =0)
+        print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+        cvscores.append(scores[1] * 100)
+
+    print("Accuracy: %.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
+
+def test_model():
+    print('\n\nTesting model...\n\n')
+    model = build_model()
+
+    (x_train, y_train) = load_dataset(DATA_TRAIN)
+    (x_val, y_val) = load_dataset(DATA_VAL)
+    (x_test, y_test) = load_dataset(DATA_TEST)
+
+    # Train the model
+    model = train_model(model, x_train, y_train, x_val, y_val)
+
+    # Evaluate the model
+    _, acc = model.evaluate(x_test, y_test, verbose=0)
+    print(acc)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) >= 2:
+        if sys.argv[1] == 'train':
+            evaluate_model()
+            sys.exit(0)
+
+    # Default
+    test_model()
