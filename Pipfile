@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 keras = "*"
-tensorflow = "*"
+tensorflow = "==1.15.2"
 pandas = "*"
 numpy = "*"
 scikit-learn = "*"

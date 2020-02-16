@@ -60,7 +60,7 @@ def train_model(model, X_train, Y_train, X_val, Y_val):
     return model
 
 def evaluate_model():
-    print('\n\Evaluating model...\n\n')
+    print('\nEvaluating model...\n\n')
     cvscores = []
     (X, y) = load_dataset(DATA)
     kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
